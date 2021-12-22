@@ -1,4 +1,4 @@
-import { Symbol } from "utils/checkWinner";
+import { Symbol } from "./utils/checkWinner";
 
 interface Shared {
     waitingList: Record<NonNullable<Symbol>, WaitingUser[]>;

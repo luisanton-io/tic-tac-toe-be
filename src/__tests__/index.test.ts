@@ -1,4 +1,4 @@
-import { checkWinner, Symbol } from "utils/checkWinner";
+import { checkWinner, Symbol } from "../utils/checkWinner";
 
 describe("Testing", () => {
     it('should work', () => {

@@ -1,6 +1,6 @@
 import express from 'express'
 import cors from 'cors'
-import { shared } from 'shared'
+import { shared } from './shared'
 
 const app = express()
 

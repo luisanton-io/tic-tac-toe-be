@@ -1,9 +1,9 @@
 import http from "http";
 import { app } from "./app";
 import { Server, Socket } from "socket.io"
-import { shared } from "shared";
-import { checkWinner } from "utils/checkWinner";
-import { isGameOver } from "utils/isGameOver";
+import { shared } from "./shared";
+import { checkWinner } from "./utils/checkWinner";
+import { isGameOver } from "./utils/isGameOver";
 
 const httpServer = http.createServer(app)
 
