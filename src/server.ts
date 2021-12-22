@@ -34,9 +34,12 @@ io.on("connection", (socket) => {
         console.log({ opponentSymbol })
 
         if (shared.waitingList[opponentSymbol].length === 0) {
-            shared.waitingList[symbol].push({ name, socket })
-
             socket.emit("waitingForOpponent")
+            try {
+                shared.waitingList[symbol].push({ name, socket })
+            } catch (error) {
+                console.error(error)
+            }
         } else {
             const opponent = shared.waitingList[opponentSymbol].shift()!
 
