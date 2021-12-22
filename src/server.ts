@@ -84,6 +84,7 @@ io.on("connection", (socket) => {
             if (gameIsOver) {
                 // this is a draw
                 socket.emit("gameOver", { winner, matrix })
+                socket.to(opponent.socketId).emit("gameOver", { winner, matrix })
             } else {
                 // the game is not over yet
                 socket.emit("waitingForMove")
