@@ -17,14 +17,24 @@ io.on("connection", (socket) => {
 
         const onDisconnect = () => {
             console.log("Client " + socket.id + " disconnected");
-            shared.waitingList[symbol] = shared.waitingList[symbol].filter(u => u.socket.id !== socket.id)
+            try {
+                shared.waitingList[symbol] = shared.waitingList[symbol].filter(u => u.socket.id !== socket.id)
+            } catch (error) {
+                console.log({ symbol })
+                console.error(error)
+            }
         }
 
         socket.on("disconnect", onDisconnect);
 
         socket.on("leave", () => {
             console.log("Client " + socket.id + " left");
-            shared.waitingList[symbol] = shared.waitingList[symbol].filter(u => u.socket.id !== socket.id)
+            try {
+                shared.waitingList[symbol] = shared.waitingList[symbol].filter(u => u.socket.id !== socket.id)
+            } catch (error) {
+                console.log({ symbol })
+                console.error(error)
+            }
 
             socket.off("disconnect", onDisconnect);
         });
@@ -38,6 +48,7 @@ io.on("connection", (socket) => {
             try {
                 shared.waitingList[symbol].push({ name, socket })
             } catch (error) {
+                console.log({ symbol })
                 console.error(error)
             }
         } else {
