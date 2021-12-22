@@ -7,7 +7,7 @@ import { isGameOver } from "./utils/isGameOver";
 
 const httpServer = http.createServer(app)
 
-const io = new Server(httpServer);
+const io = new Server(httpServer, { cors: { origin: "https://strive-tic-tac-toe.herokuapp.com" } });
 
 io.on("connection", (socket) => {
     console.log("New client connected with ID " + socket.id);
