@@ -6,7 +6,9 @@
   "scripts": {
     "test": "NODE_PATH=./src jest",
     "watch": "NODE_PATH=./src jest --watchAll",
-    "dev": "NODE_PATH=./src ts-node-dev ./src"
+    "dev": "NODE_PATH=./src ts-node-dev ./src",
+    "start": "node dist/index.js",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",

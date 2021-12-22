@@ -9,31 +9,24 @@ const httpServer = http.createServer(app)
 
 const io = new Server(httpServer);
 
-// io.use((socket, next) => {
-//     const token = socket.request.headers.cookie?.split(";")[0].split("=")[1];
-//     const refreshToken = socket.request.headers.cookie?.split(";")[1].split("=")[1];
-
-//     if (jwt.verify(token, "SECRET_KEY")) {
-//         socket.emit("JWT_EXPIRED")
-//     }
-//     next();
-// })
-
-
 io.on("connection", (socket) => {
     console.log("New client connected with ID " + socket.id);
 
     socket.on("loggedIn", ({ name, symbol }: { name: string, symbol: "X" | "O" }) => {
         console.log(name + " is waiting for a game...")
 
-        socket.on("disconnect", () => {
+        const onDisconnect = () => {
             console.log("Client " + socket.id + " disconnected");
             shared.waitingList[symbol] = shared.waitingList[symbol].filter(u => u.socket.id !== socket.id)
-        });
+        }
+
+        socket.on("disconnect", onDisconnect);
 
         socket.on("leave", () => {
-            console.log("Client " + socket.id + " disconnected");
+            console.log("Client " + socket.id + " left");
             shared.waitingList[symbol] = shared.waitingList[symbol].filter(u => u.socket.id !== socket.id)
+
+            socket.off("disconnect", onDisconnect);
         });
 
         const opponentSymbol = symbol === "X" ? "O" : "X";
@@ -45,19 +38,22 @@ io.on("connection", (socket) => {
 
             socket.emit("waitingForOpponent")
         } else {
-            const user = shared.waitingList[opponentSymbol].shift()!
-            const [symbol1, symbol2] = Math.random() >= 0.5 ? ["X", "O"] : ["O", "X"]
+            const opponent = shared.waitingList[opponentSymbol].shift()!
 
-            user.socket.emit("gameStarted", {
-                name: name,
-                socketId: socket.id,
-                symbol: symbol1,
+            opponent.socket.emit("gameStarted", {
+                opponent: {
+                    name: name,
+                    socketId: socket.id
+                },
+                symbol: opponentSymbol,
             })
 
             socket.emit("gameStarted", {
-                name: user.name,
-                socketId: user.socket.id,
-                symbol: symbol2
+                opponent: {
+                    name: opponent.name,
+                    socketId: opponent.socket.id
+                },
+                symbol: symbol
             })
         }
     })
@@ -84,7 +80,6 @@ io.on("connection", (socket) => {
             socket.to(opponent.socketId).emit("gameOver", { winner, matrix })
         }
 
-        // socket.to(opponent.socketId).emit("hello")
     })
 
 
